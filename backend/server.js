@@ -15,23 +15,15 @@ require('./config/passport');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// CORS setup — allow localhost (any port), LAN IP, and ngrok tunnels
+// CORS — allow all origins in production (Caddy handles public access control)
+// In production the backend is NOT directly exposed; only Caddy can reach it.
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // curl / Postman / no-origin
-    const allowed =
-      /^http:\/\/localhost(:\d+)?$/.test(origin) ||         // any localhost port
-      /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||     // loopback
-      /^http:\/\/192\.0\.0\.\d+(:\d+)?$/.test(origin) ||   // CLAT LAN
-      /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/.test(origin) || // normal LAN
-      /^http:\/\/10\.\d+\.\d+\.\d+(:\d+)?$/.test(origin) || // 10.x.x.x LAN
-      /\.ngrok(-free)?\.app$/.test(origin) ||               // any ngrok tunnel
-      /\.ngrok\.io$/.test(origin);
-    if (allowed) return callback(null, true);
-    callback(new Error(`CORS: Origin ${origin} not allowed`));
-  },
+  origin: true,   // reflect request origin — safe because backend is internal-only
   credentials: true
 }));
+
+// Trust Caddy reverse proxy (needed for secure cookies + correct IP logging)
+app.set('trust proxy', 1);
 
 // Body parser middlewares
 app.use(express.json());
@@ -45,8 +37,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      secure: false, // Set to true if running on HTTPS
-      sameSite: 'lax'
+      secure: process.env.NODE_ENV === 'production', // true in prod (HTTPS)
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     }
   })
 );
