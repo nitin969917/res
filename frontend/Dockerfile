@@ -1,27 +1,23 @@
-# ── Stage 1: Build the React app ──────────────────────────────
+# ── Stage 1: Build React ──────────────────────────────────────
 FROM node:20-alpine AS builder
 
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm ci
-
 COPY . .
 
-# In production, API calls use /api (relative path, proxied by Nginx)
+# Production: API goes to /api (proxied by Caddy to backend)
 ENV VITE_API_URL=/api
 
 RUN npm run build
 
-# ── Stage 2: Serve with Nginx ──────────────────────────────────
-FROM nginx:alpine
+# ── Stage 2: Serve with Caddy (auto HTTPS) ────────────────────
+FROM caddy:alpine
 
-# Copy built assets
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Copy built React app
+COPY --from=builder /app/dist /srv
 
-# Copy our Nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy Caddy config
+COPY Caddyfile /etc/caddy/Caddyfile
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80 443

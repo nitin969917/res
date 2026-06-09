@@ -1,0 +1,25 @@
+# Caddy global config
+{
+    email nitin9699176009@gmail.com
+}
+
+# Your site — Caddy auto-gets HTTPS cert from Let's Encrypt
+146.56.49.92.nip.io {
+
+    # Proxy API calls to backend container
+    handle /api/* {
+        reverse_proxy backend:5001
+    }
+
+    # Proxy uploaded files to backend
+    handle /uploads/* {
+        reverse_proxy backend:5001
+    }
+
+    # Serve React SPA for all other routes
+    handle {
+        root * /srv
+        try_files {path} /index.html
+        file_server
+    }
+}
