@@ -114,7 +114,7 @@ async function generateCardDataUrl(qrCanvasEl, tableNumber, restaurantName, menu
   ctx.beginPath(); ctx.moveTo(70, H - 22); ctx.lineTo(W - 70, H - 22); ctx.stroke();
   ctx.fillStyle = 'rgba(255,255,255,0.15)';
   ctx.font = '500 7.5px monospace'; ctx.textAlign = 'center';
-  const shortUrl = menuUrl.replace(/^https?:///, '').slice(0, 52);
+  const shortUrl = menuUrl.replace(/^https?:\/\//, '').slice(0, 52);
   ctx.fillText(shortUrl, W / 2, H - 10);
 
   return canvas.toDataURL('image/png');
