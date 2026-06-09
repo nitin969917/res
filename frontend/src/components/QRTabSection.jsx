@@ -216,11 +216,8 @@ export default function QRTabSection({ tables, settings, addTable, deleteTable }
 
   const restaurantName = settings.restaurantName || 'BiteQR Cafe';
 
-  // ── QR Base URL ──────────────────────────────────
-  // Use the VITE_LAN_URL env var (set in frontend/.env) so QR codes encode
-  // the real LAN IP instead of "localhost" — otherwise phones can't open them.
-  const defaultBase = import.meta.env.VITE_LAN_URL || window.location.origin;
-  const [baseUrl, setBaseUrl] = useState(defaultBase.replace(/\/$/, ''));
+  // Always use the current domain — no manual override needed in production
+  const baseUrl = window.location.origin;
 
   const getMenuUrl = (tableNumber) =>
     `${baseUrl}/menu?table=${encodeURIComponent(tableNumber)}`;
@@ -433,28 +430,6 @@ export default function QRTabSection({ tables, settings, addTable, deleteTable }
           </div>
         </div>
 
-        {/* QR Base URL editor — critical for mobile scanning */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="flex-shrink-0">
-            <div className="text-[10px] font-extrabold uppercase text-amber-700 tracking-wider">📱 QR Base URL</div>
-            <div className="text-[10px] text-amber-600 mt-0.5">Must be your LAN IP so phone can open the QR link</div>
-          </div>
-          <div className="flex flex-1 gap-2 w-full sm:w-auto">
-            <input
-              type="url"
-              value={baseUrl}
-              onChange={e => setBaseUrl(e.target.value.replace(/\/$/, ''))}
-              className="flex-1 min-w-0 bg-white border border-amber-300 rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400"
-              placeholder="http://192.168.x.x:5175"
-            />
-            <button
-              onClick={() => { setBaseUrl(window.location.origin); toast('Reset to current origin'); }}
-              className="bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-bold px-3 py-2 rounded-xl transition cursor-pointer whitespace-nowrap"
-            >
-              Reset
-            </button>
-          </div>
-        </div>
 
         {/* Stats bar */}
         {tables.length > 0 && (

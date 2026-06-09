@@ -9,6 +9,8 @@ import {
 export default function CustomerMenu() {
   const [searchParams] = useSearchParams();
   const tableParam = searchParams.get('table');
+  const isDelivery = searchParams.get('delivery') === 'true';
+  const deliveryAddress = searchParams.get('address') || '';
 
   const {
     settings,
@@ -29,7 +31,9 @@ export default function CustomerMenu() {
   const [orderNote, setOrderNote] = useState('');
   const [customTable, setCustomTable] = useState('Table 1');
 
-  const currentTable = tableParam || customTable;
+  const currentTable = isDelivery
+    ? `Delivery – ${deliveryAddress || 'Address not provided'}`
+    : (tableParam || customTable);
 
   // Filter items
   const filteredItems = items.filter(item => {
@@ -64,7 +68,9 @@ export default function CustomerMenu() {
   const handlePlaceOrder = () => {
     if (cart.length === 0) return;
 
-    let orderText = `*🍽️ NEW ORDER - ${currentTable.toUpperCase()}*\n`;
+    let orderText = isDelivery
+      ? `*🛵 DELIVERY ORDER*\n📍 Address: ${deliveryAddress}\n`
+      : `*🍽️ NEW ORDER - ${currentTable.toUpperCase()}*\n`;
     orderText += `=========================\n\n`;
 
     cart.forEach(item => {
