@@ -9,6 +9,7 @@ const SettingsSchema = new mongoose.Schema({
   currencySymbol: { type: String, default: '$' },
   logoUrl: { type: String, default: '' },
   address: { type: String, default: '' },
+  heroImageUrl: { type: String, default: '' },
   taxRate: { type: Number, default: 0 },
   updatedAt: { type: Date, default: Date.now }
 });

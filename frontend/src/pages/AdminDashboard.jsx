@@ -60,8 +60,10 @@ export default function AdminDashboard() {
   const [restSymbol, setRestSymbol] = useState(settings.currencySymbol);
   const [restAddress, setRestAddress] = useState(settings.address);
   const [restTax, setRestTax] = useState(settings.taxRate);
-  const [restLogoUrl, setRestLogoUrl] = useState(settings.logoUrl);
+  const [restLogoUrl, setRestLogoUrl] = useState(settings.logoUrl || '');
   const [restLogoFile, setRestLogoFile] = useState(null);
+  const [restHeroUrl, setRestHeroUrl] = useState(settings.heroImageUrl || '');
+  const [restHeroFile, setRestHeroFile] = useState(null);
 
   // Handle Logout
   const handleLogout = async () => {
@@ -179,10 +181,9 @@ export default function AdminDashboard() {
     formData.append('address', restAddress);
     formData.append('taxRate', restTax);
     formData.append('logoUrl', restLogoUrl);
-    
-    if (restLogoFile) {
-      formData.append('logoFile', restLogoFile);
-    }
+    formData.append('heroImageUrl', restHeroUrl);
+    if (restLogoFile) formData.append('logoFile', restLogoFile);
+    if (restHeroFile) formData.append('heroFile', restHeroFile);
 
     await updateSettings(formData);
   };
@@ -193,19 +194,23 @@ export default function AdminDashboard() {
       <header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-gradient-premium p-2.5 rounded-xl text-white shadow-md">
-              <UtensilsCrossed size={20} />
-            </div>
+            {settings.logoUrl ? (
+              <img src={settings.logoUrl} alt={settings.restaurantName} className="w-10 h-10 rounded-xl object-cover border border-orange-500/30 shadow-md" />
+            ) : (
+              <div className="bg-gradient-premium p-2.5 rounded-xl text-white shadow-md">
+                <UtensilsCrossed size={20} />
+              </div>
+            )}
             <div>
               <h1 className="font-extrabold text-lg tracking-tight text-white flex items-center gap-2">
-                BiteQR Admin
+                {settings.restaurantName || 'BiteQR Admin'}
                 {isDemoMode && (
                   <span className="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full uppercase tracking-wider font-bold">
                     Demo Mode
                   </span>
                 )}
               </h1>
-              <p className="text-[10px] text-slate-400">Managing: {settings.restaurantName}</p>
+              <p className="text-[10px] text-slate-400">Admin Panel</p>
             </div>
           </div>
           
@@ -617,36 +622,53 @@ export default function AdminDashboard() {
                     />
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1.5 tracking-wider">Logo Image URL</label>
-                      <input
-                        type="text"
-                        value={restLogoUrl}
-                        onChange={(e) => setRestLogoUrl(e.target.value)}
-                        placeholder="Paste image URL here"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/15 focus:border-orange-500 focus:bg-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1.5 tracking-wider">Or Upload Logo file</label>
-                      <div className="relative w-full border border-slate-200 border-dashed bg-slate-50 hover:bg-slate-100 rounded-xl px-4 py-2.5 flex items-center justify-between cursor-pointer transition">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files[0]) {
-                              setRestLogoFile(e.target.files[0]);
-                            }
-                          }}
-                          className="absolute inset-0 opacity-0 cursor-pointer"
-                        />
-                        <span className="text-[11px] text-slate-500 truncate pr-4">
-                          {restLogoFile ? restLogoFile.name : 'Select branding image...'}
-                        </span>
-                        <Upload size={14} className="text-slate-400" />
+                  {/* Logo */}
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-3">
+                    <label className="text-[10px] font-extrabold uppercase text-slate-500 tracking-wider">Restaurant Logo</label>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] text-slate-400 mb-1">Image URL</label>
+                        <input type="text" value={restLogoUrl} onChange={(e) => setRestLogoUrl(e.target.value)}
+                          placeholder="https://..." className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/15 focus:border-orange-500" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] text-slate-400 mb-1">Or Upload File</label>
+                        <div className="relative w-full border border-dashed border-slate-200 bg-white hover:bg-slate-50 rounded-xl px-4 py-2.5 flex items-center justify-between cursor-pointer transition">
+                          <input type="file" accept="image/*" onChange={(e) => { if (e.target.files?.[0]) setRestLogoFile(e.target.files[0]); }} className="absolute inset-0 opacity-0 cursor-pointer" />
+                          <span className="text-[11px] text-slate-500 truncate pr-4">{restLogoFile ? restLogoFile.name : 'Select logo image...'}</span>
+                          <Upload size={14} className="text-slate-400" />
+                        </div>
                       </div>
                     </div>
+                    {(restLogoUrl || restLogoFile) && (
+                      <div className="flex items-center gap-2">
+                        <img src={restLogoFile ? URL.createObjectURL(restLogoFile) : restLogoUrl} alt="Logo preview" className="w-12 h-12 rounded-xl object-cover border border-orange-200" />
+                        <span className="text-[10px] text-slate-400">Logo preview</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Hero Image */}
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-3">
+                    <label className="text-[10px] font-extrabold uppercase text-slate-500 tracking-wider">Landing Page Hero Image</label>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] text-slate-400 mb-1">Image URL</label>
+                        <input type="text" value={restHeroUrl} onChange={(e) => setRestHeroUrl(e.target.value)}
+                          placeholder="https://..." className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/15 focus:border-orange-500" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] text-slate-400 mb-1">Or Upload File</label>
+                        <div className="relative w-full border border-dashed border-slate-200 bg-white hover:bg-slate-50 rounded-xl px-4 py-2.5 flex items-center justify-between cursor-pointer transition">
+                          <input type="file" accept="image/*" onChange={(e) => { if (e.target.files?.[0]) setRestHeroFile(e.target.files[0]); }} className="absolute inset-0 opacity-0 cursor-pointer" />
+                          <span className="text-[11px] text-slate-500 truncate pr-4">{restHeroFile ? restHeroFile.name : 'Select hero image...'}</span>
+                          <Upload size={14} className="text-slate-400" />
+                        </div>
+                      </div>
+                    </div>
+                    {(restHeroUrl || restHeroFile) && (
+                      <img src={restHeroFile ? URL.createObjectURL(restHeroFile) : restHeroUrl} alt="Hero preview" className="w-full h-28 rounded-xl object-cover border border-slate-200" />
+                    )}
                   </div>
 
                   <button

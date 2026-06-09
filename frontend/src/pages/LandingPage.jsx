@@ -246,9 +246,9 @@ export default function LandingPage() {
 
         <div className="lg:col-span-5 relative flex justify-center lg:justify-end">
           <div className="relative w-full max-w-[380px] aspect-[4/5] rounded-[32px] overflow-hidden border border-slate-800/80 shadow-2xl group">
-            {/* Hero image — always a rich food/restaurant scene, independent of logo */}
+            {/* Hero image — uses admin settings hero if provided, else fallback to rich food scene */}
             <img
-              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&auto=format&fit=crop&q=80"
+              src={settings?.heroImageUrl || "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&auto=format&fit=crop&q=80"}
               alt="Fine dining restaurant"
               className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
             />
