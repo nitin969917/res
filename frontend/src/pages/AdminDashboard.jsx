@@ -633,7 +633,7 @@ export default function AdminDashboard() {
                       placeholder='e.g. https://www.google.com/maps/embed?pb=...'
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/15 focus:border-orange-500 focus:bg-white"
                     />
-                    <span className="text-[9px] text-slate-400 mt-1 block">Go to Google Maps -> Share -> Embed a map -> Copy HTML -> Extract the src="..." link.</span>
+                    <span className="text-[9px] text-slate-400 mt-1 block">Go to Google Maps → Share → Embed a map → Copy HTML → Extract the src="..." link.</span>
                   </div>
 
                   {/* Logo */}
