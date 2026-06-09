@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+
+  # ── MongoDB ────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7-jammy
+    container_name: biteqr_mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    # Not exposed to host — only accessible within Docker network
+    networks:
+      - biteqr_net
+
+  # ── Backend API ────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: biteqr_backend
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/biteqr
+    volumes:
+      - uploads_data:/app/uploads
+      - json_data:/app/data
+    depends_on:
+      - mongo
+    networks:
+      - biteqr_net
+    # Not directly exposed — Nginx proxies /api to this
+
+  # ── Frontend (Nginx) ───────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: biteqr_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - biteqr_net
+
+volumes:
+  mongo_data:
+  uploads_data:
+  json_data:
+
+networks:
+  biteqr_net:
+    driver: bridge
