@@ -64,6 +64,7 @@ export default function AdminDashboard() {
   const [restLogoFile, setRestLogoFile] = useState(null);
   const [restHeroUrl, setRestHeroUrl] = useState(settings.heroImageUrl || '');
   const [restHeroFile, setRestHeroFile] = useState(null);
+  const [restMapUrl, setRestMapUrl] = useState(settings.googleMapUrl || '');
 
   // Handle Logout
   const handleLogout = async () => {
@@ -182,6 +183,7 @@ export default function AdminDashboard() {
     formData.append('taxRate', restTax);
     formData.append('logoUrl', restLogoUrl);
     formData.append('heroImageUrl', restHeroUrl);
+    formData.append('googleMapUrl', restMapUrl);
     if (restLogoFile) formData.append('logoFile', restLogoFile);
     if (restHeroFile) formData.append('heroFile', restHeroFile);
 
@@ -620,6 +622,18 @@ export default function AdminDashboard() {
                       onChange={(e) => setRestAddress(e.target.value)}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/15 focus:border-orange-500 focus:bg-white"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1.5 tracking-wider">Google Maps Embed URL / Iframe src</label>
+                    <input
+                      type="text"
+                      value={restMapUrl}
+                      onChange={(e) => setRestMapUrl(e.target.value)}
+                      placeholder='e.g. https://www.google.com/maps/embed?pb=...'
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500/15 focus:border-orange-500 focus:bg-white"
+                    />
+                    <span className="text-[9px] text-slate-400 mt-1 block">Go to Google Maps -> Share -> Embed a map -> Copy HTML -> Extract the src="..." link.</span>
                   </div>
 
                   {/* Logo */}

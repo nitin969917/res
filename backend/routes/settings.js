@@ -20,7 +20,7 @@ router.put('/', ensureAuthenticated, upload.fields([
   { name: 'heroFile', maxCount: 1 }
 ]), async (req, res) => {
   try {
-    const { restaurantName, phoneNumber, currency, currencySymbol, address, taxRate, logoUrl, heroImageUrl } = req.body;
+    const { restaurantName, phoneNumber, currency, currencySymbol, address, taxRate, logoUrl, heroImageUrl, googleMapUrl } = req.body;
 
     const updateData = {};
     if (restaurantName !== undefined) updateData.restaurantName = restaurantName;
@@ -29,6 +29,7 @@ router.put('/', ensureAuthenticated, upload.fields([
     if (currencySymbol !== undefined) updateData.currencySymbol = currencySymbol;
     if (address !== undefined) updateData.address = address;
     if (taxRate !== undefined) updateData.taxRate = Number(taxRate);
+    if (googleMapUrl !== undefined) updateData.googleMapUrl = googleMapUrl;
 
     // Logo: uploaded file takes priority over URL
     if (req.files && req.files['logoFile'] && req.files['logoFile'][0]) {

@@ -144,6 +144,7 @@ export default function LandingPage() {
   const restaurantPhone = settings?.phoneNumber ? `+${settings.phoneNumber}` : '';
   const logoUrl = settings?.logoUrl;
   const currencySymbol = settings?.currencySymbol || '₹';
+  const googleMapUrl = settings?.googleMapUrl;
 
   // Pick first 3 available items for showcase
   const featuredDishes = items.filter(i => i.isAvailable).slice(0, 3);
@@ -420,6 +421,22 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Map Section */}
+      {googleMapUrl && (
+        <section className="w-full h-[400px] border-t border-slate-900 bg-slate-900 z-10 relative">
+          <iframe 
+            src={googleMapUrl} 
+            width="100%" 
+            height="100%" 
+            style={{ border: 0 }} 
+            allowFullScreen="" 
+            loading="lazy" 
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Restaurant Location Map"
+          ></iframe>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="w-full border-t border-slate-900 py-10 bg-slate-950 z-10 mt-auto">

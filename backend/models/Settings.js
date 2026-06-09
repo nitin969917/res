@@ -10,6 +10,7 @@ const SettingsSchema = new mongoose.Schema({
   logoUrl: { type: String, default: '' },
   address: { type: String, default: '' },
   heroImageUrl: { type: String, default: '' },
+  googleMapUrl: { type: String, default: '' },
   taxRate: { type: Number, default: 0 },
   updatedAt: { type: Date, default: Date.now }
 });
