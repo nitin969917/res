@@ -24,9 +24,9 @@ const tableSchema = new mongoose.Schema({ number: String });
 const Table = mongoose.model('Table', tableSchema);
 
 const settingsSchema = new mongoose.Schema({
-  _id: String, restaurantName: String, phoneNumber: String,
-  currency: String, currencySymbol: String, logoUrl: String,
-  address: String, taxRate: Number,
+  restaurantName: String, phoneNumber: String,
+  currency: String, currencySymbol: String,
+  logoUrl: String, address: String, taxRate: Number,
 });
 const Settings = mongoose.model('Settings', settingsSchema, 'settings');
 
@@ -129,9 +129,8 @@ async function seed() {
 
   // 4. Settings — update your phone number here
   await Settings.create({
-    _id: 'default',
     restaurantName: 'BiteQR Cafe & Lounge',
-    phoneNumber: '919876543210',   // ← change to your WhatsApp number
+    phoneNumber: '919699176009',   // ← your WhatsApp number
     currency: 'INR',
     currencySymbol: '₹',
     logoUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200&auto=format&fit=crop&q=60',
