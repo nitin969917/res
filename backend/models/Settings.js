@@ -39,14 +39,12 @@ const SettingsModel = {
 
   update: async (data) => {
     if (getDbMode() === 'mongodb') {
-      let settings = await MongoSettings.findOne();
-      if (!settings) {
-        settings = new MongoSettings(data);
-      } else {
-        Object.assign(settings, data);
-        settings.updatedAt = Date.now();
-      }
-      return await settings.save();
+      const settings = await MongoSettings.findOneAndUpdate(
+        {},  // match the first (only) settings document
+        { $set: { ...data, updatedAt: new Date() } },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+      return settings;
     } else {
       const current = readData('settings');
       const updated = {
