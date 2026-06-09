@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { 
   ShoppingBag, Search, X, Plus, Minus, Flame, 
-  Leaf, AlertTriangle, ChevronRight, Info, CheckCircle2 
+  Leaf, ChevronRight, Info, CheckCircle2 
 } from 'lucide-react';
 
 export default function CustomerMenu() {
@@ -135,34 +135,6 @@ export default function CustomerMenu() {
 
       {/* Main Body container */}
       <main className="max-w-md mx-auto w-full px-4 flex-1 mt-4">
-        {/* Table Param Alert if missing */}
-        {!tableParam && (
-          <div className="mb-4 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex flex-col gap-2 shadow-sm">
-            <div className="flex items-center gap-2 text-amber-800 font-bold text-sm">
-              <AlertTriangle size={18} />
-              No table QR detected
-            </div>
-            <p className="text-xs text-amber-700 leading-relaxed">
-              You accessed this menu without scanning a table QR code. For ordering, please pick a table below:
-            </p>
-            <div className="flex gap-2 mt-1">
-              <select 
-                value={customTable} 
-                onChange={(e) => setCustomTable(e.target.value)}
-                className="bg-white border border-amber-200 text-xs rounded-xl px-3 py-1.5 font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500 flex-1 shadow-sm"
-              >
-                <option value="Table 1">Table 1</option>
-                <option value="Table 2">Table 2</option>
-                <option value="Table 3">Table 3</option>
-                <option value="Table 4">Table 4</option>
-                <option value="Table 5">Table 5</option>
-              </select>
-              <div className="bg-amber-100 text-amber-800 font-bold text-[10px] px-2.5 py-1.5 rounded-xl flex items-center justify-center uppercase tracking-wider">
-                Demo Mode
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Search bar & filter pill controls */}
         <div className="flex flex-col gap-3 mb-5">
